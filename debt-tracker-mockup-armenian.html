@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="hy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Պարտքերի տետր – հավելվածի նախատիպ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=Noto+Sans+Armenian:wght@400..800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#E8EBF0; --paper:#FBFCFE; --ink:#1C2B5A; --text:#1A1D24; --muted:#565E6C;
+  --rule:#D3DCEC; --margin:#E59A9A; --debt:#B3261E; --pay:#1D4CC0; --chip:#E6ECF7;
+  --frame:#22262E; --on-ink:#FFFFFF; --tint-debt:#FBE9E7; --tint-pay:#E5EDFD;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    color-scheme: dark;
+    --bg:#0F1217; --paper:#171B23; --ink:#C7D4FF; --text:#E8EBF1; --muted:#A3AAB7;
+    --rule:#283041; --margin:#6E3434; --debt:#FF8E84; --pay:#8DB3FF; --chip:#222A39;
+    --frame:#000000; --on-ink:#101522; --tint-debt:#3A1F1F; --tint-pay:#1B2640;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:"Archivo", "Noto Sans Armenian", "Arial Armenian", system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  padding:max(32px, env(safe-area-inset-top,0px)) 20px max(48px, env(safe-area-inset-bottom,0px));
+}
+.intro{max-width:1480px; margin:0 auto 28px}
+.intro h1{font-size:28px; font-weight:750; margin:0 0 6px; color:var(--ink)}
+.intro p{margin:0; color:var(--muted); font-size:15px; max-width:66ch; line-height:1.55}
+.board{max-width:1560px; margin:0 auto; display:flex; flex-wrap:wrap; gap:36px 28px; justify-content:center}
+figure{margin:0; display:flex; flex-direction:column; align-items:center; gap:12px}
+figcaption{font-size:14px; color:var(--muted); text-align:center; max-width:340px; line-height:1.45}
+figcaption strong{color:var(--text); display:block; font-size:15px}
+
+.phone{
+  width:360px; max-width:100%; height:760px; border-radius:38px; background:var(--frame);
+  padding:10px; box-shadow:0 18px 40px -18px rgba(10,20,50,.45);
+}
+.screen{
+  height:100%; border-radius:30px; background:var(--paper); overflow:hidden;
+  display:flex; flex-direction:column; position:relative;
+}
+.top{display:flex; align-items:center; gap:8px; padding:20px 16px 8px}
+.top h2{font-size:19px; font-weight:750; margin:0; flex:1; color:var(--ink)}
+.icon-btn{
+  width:44px; height:44px; border-radius:12px; border:0; background:transparent; color:var(--ink);
+  display:grid; place-items:center; cursor:pointer; flex:none;
+}
+.icon-btn svg{width:22px; height:22px}
+.scroll{flex:1; overflow:auto}
+button, input, textarea, select{font:inherit; color:inherit}
+
+/* Screen 1 */
+.total{padding:6px 20px 14px}
+.total .label{font-size:14px; color:var(--muted)}
+.total .num{font-size:42px; font-weight:800; font-stretch:115%; color:var(--debt); line-height:1.1; margin-top:2px; white-space:nowrap}
+.total .sub{font-size:13px; color:var(--muted); margin-top:2px}
+.search{margin:0 16px; position:relative}
+.search input{
+  width:100%; height:46px; border-radius:12px; border:1.5px solid var(--rule); background:var(--paper);
+  padding:0 14px 0 42px; font-size:15px;
+}
+.search svg{position:absolute; left:13px; top:13px; width:20px; height:20px; color:var(--muted)}
+.chips{display:flex; gap:8px; padding:12px 16px 4px; overflow-x:auto}
+.chip{
+  flex:none; height:36px; padding:0 14px; border-radius:18px; border:0; background:var(--chip);
+  font-size:14px; color:var(--text); cursor:pointer;
+}
+.chip[aria-pressed="true"]{background:var(--ink); color:var(--on-ink); font-weight:600}
+.sortbar{display:flex; justify-content:space-between; align-items:center; padding:8px 16px 6px; font-size:13px; color:var(--muted)}
+.sortbtn{border:0; background:transparent; color:var(--ink); font-weight:600; font-size:13px; display:flex; align-items:center; gap:4px; min-height:36px; cursor:pointer}
+.sortbtn svg{width:16px; height:16px}
+
+.ledger{list-style:none; margin:0; padding:0 0 90px; position:relative}
+.ledger::before{content:""; position:absolute; left:24px; top:0; bottom:0; width:1.5px; background:var(--margin)}
+.ledger li{
+  display:flex; align-items:center; gap:12px; padding:11px 16px 11px 36px;
+  border-bottom:1px solid var(--rule); min-height:64px;
+}
+.av{
+  flex:none; width:38px; height:38px; border-radius:50%; background:var(--chip); color:var(--ink);
+  display:grid; place-items:center; font-weight:700; font-size:14px;
+}
+.who{flex:1; min-width:0}
+.who .n{font-weight:650; font-size:15px}
+.who .s{font-size:12.5px; color:var(--muted); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.who .s.late{color:var(--debt); font-weight:600}
+.amt{font-weight:750; font-size:15px; color:var(--debt); text-align:right; white-space:nowrap}
+.amt.zero{color:var(--muted); font-weight:500}
+.fab{
+  position:absolute; left:16px; right:16px; bottom:16px; height:54px; border-radius:16px; border:0;
+  background:var(--ink); color:var(--on-ink); font-weight:700; font-size:16px;
+  display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;
+}
+.fab svg{width:20px; height:20px}
+
+/* Screen 2 */
+.profile{display:flex; align-items:center; gap:14px; padding:4px 20px 0}
+.profile .av{width:52px; height:52px; font-size:18px}
+.profile .n{font-size:19px; font-weight:750}
+.profile .s{font-size:13px; color:var(--muted); margin-top:2px}
+.owes{margin:16px 16px 0; padding:16px; border-radius:16px; background:var(--tint-debt)}
+.owes .label{font-size:14px; color:var(--muted)}
+.owes .num{font-size:38px; font-weight:800; font-stretch:115%; color:var(--debt); line-height:1.15; white-space:nowrap}
+.owes .sub{font-size:13px; color:var(--muted)}
+.actions{display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:12px 16px 0}
+.big{
+  height:54px; border-radius:14px; border:0; font-weight:700; font-size:15px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.big svg{width:20px; height:20px}
+.big.took{background:var(--debt); color:var(--on-ink)}
+.big.paid{background:var(--pay); color:var(--on-ink)}
+.minor{display:flex; gap:10px; padding:10px 16px 4px}
+.ghost{
+  flex:1; min-height:44px; border-radius:12px; border:1.5px solid var(--rule); background:transparent;
+  color:var(--ink); font-weight:600; font-size:13.5px; display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; padding:4px 8px;
+}
+.ghost svg{width:18px; height:18px; flex:none}
+.hist-h{display:flex; justify-content:space-between; align-items:baseline; padding:14px 16px 6px}
+.hist-h h3{margin:0; font-size:16px; font-weight:700; color:var(--ink)}
+.hist-h span{font-size:13px; color:var(--muted)}
+.hist li{align-items:flex-start}
+.date{flex:none; width:40px; font-size:12px; color:var(--muted); line-height:1.25; padding-top:2px}
+.date b{display:block; font-size:17px; color:var(--text); font-weight:700}
+.entry{flex:1; min-width:0}
+.entry .t{font-size:12.5px; font-weight:650; display:flex; align-items:center; gap:4px}
+.entry .t svg{width:14px; height:14px}
+.entry .t.took{color:var(--debt)}
+.entry .t.paid{color:var(--pay)}
+.entry .d{font-size:14px; margin-top:2px}
+.money{text-align:right}
+.money .v{font-weight:750; font-size:14.5px; white-space:nowrap}
+.money .v.took{color:var(--debt)}
+.money .v.paid{color:var(--pay)}
+.money .b{font-size:12px; color:var(--muted); margin-top:3px; white-space:nowrap}
+
+/* Screen 3 */
+.seg{display:grid; grid-template-columns:1fr 1fr; gap:4px; margin:6px 16px 0; padding:4px; background:var(--chip); border-radius:14px}
+.seg button{height:42px; border:0; border-radius:10px; background:transparent; font-weight:600; font-size:14px; cursor:pointer; color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--debt); color:var(--on-ink)}
+.form{padding:14px 16px 100px; display:flex; flex-direction:column; gap:16px}
+.field label{display:block; font-size:13.5px; font-weight:600; color:var(--muted); margin-bottom:6px}
+.amount-in{
+  width:100%; height:72px; border:0; border-bottom:2px solid var(--debt); background:transparent;
+  font-size:44px; font-weight:800; font-stretch:115%; color:var(--debt); padding:0 2px;
+}
+.field textarea, .field input.txt{
+  width:100%; border-radius:12px; border:1.5px solid var(--rule); background:var(--paper);
+  padding:12px 14px; font-size:15px; resize:none;
+}
+.field input.txt{height:46px}
+.quick{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px}
+.quick .chip{height:34px; font-size:13.5px}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.newbal{
+  display:flex; justify-content:space-between; align-items:center; gap:10px; padding:12px 14px;
+  border-radius:12px; background:var(--tint-debt); font-size:13.5px;
+}
+.newbal b{color:var(--debt); font-size:17px; white-space:nowrap}
+
+/* Screen 4 */
+.month{padding:0 20px 4px; font-size:14px; color:var(--muted)}
+.sum{list-style:none; margin:8px 16px 0; padding:0; border-top:1px solid var(--rule)}
+.sum li{display:flex; justify-content:space-between; align-items:baseline; gap:10px; padding:12px 2px; border-bottom:1px solid var(--rule)}
+.sum span{font-size:14px}
+.sum b{font-size:21px; font-weight:800; font-stretch:112%; white-space:nowrap}
+.sum .g{color:var(--debt)} .sum .c{color:var(--pay)} .sum .o{color:var(--ink)}
+.chart{margin:14px 16px 0}
+.chart h3, .late h3{margin:0 0 8px; font-size:16px; font-weight:700; color:var(--ink)}
+.legend{display:flex; gap:16px; font-size:12.5px; color:var(--muted); margin-top:6px}
+.legend i{display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-1px}
+.late{margin:18px 16px 0}
+.late ul{list-style:none; margin:0; padding:0; border-top:1px solid var(--rule)}
+.late li{display:flex; align-items:center; gap:10px; padding:10px 2px; border-bottom:1px solid var(--rule)}
+.late .who .s{color:var(--debt); font-weight:600}
+.late .bottom{display:flex; gap:10px; margin-top:12px; padding-bottom:20px}
+:focus-visible{outline:3px solid var(--pay); outline-offset:2px}
+</style>
+</head>
+<body>
+
+<header class="intro">
+  <h1>Պարտքերի տետր</h1>
+  <p>Առաջին տեսք, թե ինչպես կարող է թղթե տետրը դառնալ հավելված։ Չորս էկրան՝ հաճախորդների ցուցակը, մեկ հաճախորդի էջը, նոր գրառում ավելացնելը և ամսական ամփոփումը։ Բոլոր անուններն ու թվերը օրինակներ են։</p>
+</header>
+
+<main class="board">
+
+  <!-- ԷԿՐԱՆ 1. ՀԱՃԱԽՈՐԴՆԵՐԻ ՑՈՒՑԱԿ -->
+  <figure>
+    <div class="phone"><div class="screen">
+      <div class="top">
+        <h2>Պարտքերի տետր</h2>
+        <button class="icon-btn" aria-label="Ամսական ամփոփում">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        </button>
+      </div>
+      <div class="scroll">
+        <div class="total">
+          <div class="label">Հաճախորդները ձեզ պարտք են</div>
+          <div class="num">438 500 ֏</div>
+          <div class="sub">8 հաճախորդից 6-ն ունեն չվճարված պարտք</div>
+        </div>
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" aria-label="Որոնել հաճախորդներին" placeholder="Որոնել անունով կամ հեռախոսով">
+        </div>
+        <div class="chips" role="group" aria-label="Զտիչ">
+          <button class="chip" aria-pressed="true">Բոլորը</button>
+          <button class="chip" aria-pressed="false">Պարտք ունեն</button>
+          <button class="chip" aria-pressed="false">Ուշացած 30+ օր</button>
+          <button class="chip" aria-pressed="false">Պարտք չունեն</button>
+        </div>
+        <div class="sortbar">
+          <span>8 հաճախորդ</span>
+          <button class="sortbtn">Ըստ պարտքի չափի
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+        </div>
+        <ul class="ledger">
+          <li><span class="av">ԱԿ</span><div class="who"><div class="n">Արամ Կարապետյան</div><div class="s">Ապրանք է վերցրել 2 օր առաջ</div></div><div class="amt">124 000 ֏</div></li>
+          <li><span class="av">ԳՀ</span><div class="who"><div class="n">Գոռ Հակոբյան</div><div class="s late">41 օր առանց վճարման</div></div><div class="amt">96 000 ֏</div></li>
+          <li><span class="av">ՄՍ</span><div class="who"><div class="n">Մարիամ Սարգսյան</div><div class="s">Երեկ վճարել է 15 000 ֏</div></div><div class="amt">73 500 ֏</div></li>
+          <li><span class="av">ՀՄ</span><div class="who"><div class="n">Հայկ Մանուկյան</div><div class="s">Այսօր ապրանք է վերցրել</div></div><div class="amt">61 000 ֏</div></li>
+          <li><span class="av">ԱՆ</span><div class="who"><div class="n">Աննա Ներսիսյան</div><div class="s late">33 օր առանց վճարման</div></div><div class="amt">48 000 ֏</div></li>
+          <li><span class="av">ՏԱ</span><div class="who"><div class="n">Տիգրան Ավետիսյան</div><div class="s">Անցյալ շաբաթ վճարել է 20 000 ֏</div></div><div class="amt">36 000 ֏</div></li>
+          <li><span class="av">ԼՊ</span><div class="who"><div class="n">Լիլիթ Պետրոսյան</div><div class="s">Պարտքը փակել է հոկտեմբերի 20-ին</div></div><div class="amt zero">0 ֏</div></li>
+          <li><span class="av">ՆՍ</span><div class="who"><div class="n">Նարե Սահակյան</div><div class="s">Պարտքը փակել է սեպտեմբերի 30-ին</div></div><div class="amt zero">0 ֏</div></li>
+        </ul>
+      </div>
+      <button class="fab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        Ավելացնել հաճախորդ
+      </button>
+    </div></div>
+    <figcaption><strong>Հաճախորդների ցուցակ</strong>Որոնեք, զտեք և դասավորեք բոլորին։ Ուշացողները երևում են կարմիրով։</figcaption>
+  </figure>
+
+  <!-- ԷԿՐԱՆ 2. ՄԵԿ ՀԱՃԱԽՈՐԴ -->
+  <figure>
+    <div class="phone"><div class="screen">
+      <div class="top">
+        <button class="icon-btn" aria-label="Վերադառնալ ցուցակին">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <h2>Հաճախորդ</h2>
+        <button class="icon-btn" aria-label="Խմբագրել հաճախորդին">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/></svg>
+        </button>
+      </div>
+      <div class="scroll">
+        <div class="profile">
+          <span class="av">ԱԿ</span>
+          <div><div class="n">Արամ Կարապետյան</div><div class="s">091 23 45 67, ապրում է եկեղեցու մոտ</div></div>
+        </div>
+        <div class="owes">
+          <div class="label">Պարտք է ձեզ</div>
+          <div class="num">124 000 ֏</div>
+          <div class="sub">Վերջին վճարումը՝ 15 000 ֏, հոկտեմբերի 14</div>
+        </div>
+        <div class="actions">
+          <button class="big took">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Տվեցի ապրանք
+          </button>
+          <button class="big paid">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg>
+            Ստացա վճար
+          </button>
+        </div>
+        <div class="minor">
+          <button class="ghost">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/></svg>
+            Ուղարկել հիշեցում
+          </button>
+          <button class="ghost">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>
+            Զանգել
+          </button>
+        </div>
+        <div class="hist-h"><h3>Պատմություն</h3><span>Հոկտեմբեր 2026</span></div>
+        <ul class="ledger hist">
+          <li><div class="date"><b>26</b>հոկ.</div><div class="entry"><div class="t took"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Վերցրել է ապրանք</div><div class="d">Բրինձ 5 կգ, ձեթ, շաքար</div></div><div class="money"><div class="v took">+18 500</div><div class="b">124 000</div></div></li>
+          <li><div class="date"><b>21</b>հոկ.</div><div class="entry"><div class="t took"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Վերցրել է ապրանք</div><div class="d">Հաց, ձու, կաթ</div></div><div class="money"><div class="v took">+4 200</div><div class="b">105 500</div></div></li>
+          <li><div class="date"><b>18</b>հոկ.</div><div class="entry"><div class="t took"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Վերցրել է ապրանք</div><div class="d">Միս, երշիկ</div></div><div class="money"><div class="v took">+32 000</div><div class="b">101 300</div></div></li>
+          <li><div class="date"><b>14</b>հոկ.</div><div class="entry"><div class="t paid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg>Վճարել է</div><div class="d">Կանխիկ</div></div><div class="money"><div class="v paid">−15 000</div><div class="b">69 300</div></div></li>
+          <li><div class="date"><b>9</b>հոկ.</div><div class="entry"><div class="t took"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Վերցրել է ապրանք</div><div class="d">Օճառ, լվացող միջոցներ</div></div><div class="money"><div class="v took">+9 600</div><div class="b">84 300</div></div></li>
+          <li><div class="date"><b>2</b>հոկ.</div><div class="entry"><div class="t took"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Վերցրել է ապրանք</div><div class="d">Ամսական մթերք</div></div><div class="money"><div class="v took">+74 700</div><div class="b">74 700</div></div></li>
+        </ul>
+      </div>
+    </div></div>
+    <figcaption><strong>Մեկ հաճախորդի էջ</strong>Ամեն ինչ, որ վերցրել ու վճարել է, ամսաթվերով և յուրաքանչյուր տողից հետո մնացորդով։</figcaption>
+  </figure>
+
+  <!-- ԷԿՐԱՆ 3. ՆՈՐ ԳՐԱՌՈՒՄ -->
+  <figure>
+    <div class="phone"><div class="screen">
+      <div class="top">
+        <button class="icon-btn" aria-label="Փակել առանց պահպանելու">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+        <h2>Արամ Կարապետյան</h2>
+      </div>
+      <div class="seg" role="group" aria-label="Գրառման տեսակ">
+        <button aria-pressed="true">Տվեցի ապրանք</button>
+        <button aria-pressed="false">Ստացա վճար</button>
+      </div>
+      <div class="scroll">
+        <div class="form">
+          <div class="field">
+            <label for="amt">Գումար (֏)</label>
+            <input id="amt" class="amount-in" inputmode="decimal" value="8 500">
+          </div>
+          <div class="field">
+            <label for="what">Ի՞նչ է վերցրել</label>
+            <textarea id="what" rows="2">Ալյուր 10 կգ, թեյ</textarea>
+            <div class="quick" role="group" aria-label="Արագ ավելացնել">
+              <button class="chip" aria-pressed="false">Հաց</button>
+              <button class="chip" aria-pressed="false">Կաթ</button>
+              <button class="chip" aria-pressed="false">Շաքար</button>
+              <button class="chip" aria-pressed="false">Բրինձ</button>
+              <button class="chip" aria-pressed="false">Ծխախոտ</button>
+            </div>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="d1">Ամսաթիվ</label>
+              <input id="d1" class="txt" value="Այսօր, հոկ. 28">
+            </div>
+            <div class="field">
+              <label for="d2">Վերադարձնել մինչև</label>
+              <input id="d2" class="txt" placeholder="Ըստ ցանկության">
+            </div>
+          </div>
+          <button class="ghost" style="flex:none; height:46px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+            Կցել կտրոնի լուսանկար
+          </button>
+          <div class="newbal"><span>Նոր մնացորդը պահպանելուց հետո</span><b>132 500 ֏</b></div>
+        </div>
+      </div>
+      <button class="fab" style="background:var(--debt)">Պահպանել</button>
+    </div></div>
+    <figcaption><strong>Նոր գրառում</strong>Երկու հպում հաճախորդի էջից։ Հաճախ վերցվող ապրանքների կոճակները խնայում են ժամանակ։</figcaption>
+  </figure>
+
+  <!-- ԷԿՐԱՆ 4. ԱՄՓՈՓՈՒՄ -->
+  <figure>
+    <div class="phone"><div class="screen">
+      <div class="top">
+        <button class="icon-btn" aria-label="Վերադառնալ ցուցակին">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <h2>Ամփոփում</h2>
+      </div>
+      <div class="scroll">
+        <div class="month">Հոկտեմբեր 2026</div>
+        <ul class="sum">
+          <li><span>Տրված է պարտքով</span><b class="g">391 000 ֏</b></li>
+          <li><span>Հավաքված է</span><b class="c">164 000 ֏</b></li>
+          <li><span>Ընդհանուր մնացած պարտքը</span><b class="o">438 500 ֏</b></li>
+        </ul>
+        <div class="chart">
+          <h3>Ըստ շաբաթների</h3>
+          <svg viewBox="0 0 312 150" width="100%" role="img" aria-label="Շաբաթական գծապատկեր. տրված է պարտքով՝ 118 000, 92 000, 106 000 և 75 000 ֏, հավաքված է՝ 38 000, 52 000, 41 000 և 33 000 ֏">
+            <line x1="0" y1="120" x2="312" y2="120" stroke="var(--rule)" stroke-width="1.5"/>
+            <g>
+              <rect x="22" y="20" width="24" height="100" rx="3" fill="var(--debt)"/>
+              <rect x="50" y="88" width="24" height="32" rx="3" fill="var(--pay)"/>
+              <rect x="98" y="42" width="24" height="78" rx="3" fill="var(--debt)"/>
+              <rect x="126" y="76" width="24" height="44" rx="3" fill="var(--pay)"/>
+              <rect x="174" y="30" width="24" height="90" rx="3" fill="var(--debt)"/>
+              <rect x="202" y="85" width="24" height="35" rx="3" fill="var(--pay)"/>
+              <rect x="250" y="56" width="24" height="64" rx="3" fill="var(--debt)"/>
+              <rect x="278" y="92" width="24" height="28" rx="3" fill="var(--pay)"/>
+            </g>
+            <g font-size="12" fill="var(--muted)" text-anchor="middle" font-family="Noto Sans Armenian, Archivo, system-ui, sans-serif">
+              <text x="48" y="140">1-ին շաբ.</text><text x="124" y="140">2-րդ շաբ.</text>
+              <text x="200" y="140">3-րդ շաբ.</text><text x="276" y="140">4-րդ շաբ.</text>
+            </g>
+          </svg>
+          <div class="legend"><span><i style="background:var(--debt)"></i>Տրված է պարտքով</span><span><i style="background:var(--pay)"></i>Հավաքված է</span></div>
+        </div>
+        <div class="late">
+          <h3>Ուշացողներ</h3>
+          <ul>
+            <li><span class="av">ԳՀ</span><div class="who"><div class="n">Գոռ Հակոբյան</div><div class="s">41 օր առանց վճարման</div></div><div class="amt">96 000 ֏</div></li>
+            <li><span class="av">ԱՆ</span><div class="who"><div class="n">Աննա Ներսիսյան</div><div class="s">33 օր առանց վճարման</div></div><div class="amt">48 000 ֏</div></li>
+          </ul>
+          <div class="bottom">
+            <button class="ghost">Հիշեցնել երկուսին</button>
+            <button class="ghost">Արտահանել Excel</button>
+          </div>
+        </div>
+      </div>
+    </div></div>
+    <figcaption><strong>Ամսական ամփոփում</strong>Որքան է տրվել պարտքով, որքան է վերադարձել, և ում պետք է հիշեցնել։</figcaption>
+  </figure>
+
+</main>
+</body>
+</html>
